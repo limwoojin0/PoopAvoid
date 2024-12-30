@@ -15,7 +15,7 @@ let score = 0;
 let isGameOver = false;
 let poopElements = [];
 
-let poopSpeed = 6;
+let poopSpeed = 9;
 let poopInterval;
 let gameInterval;
 
@@ -28,8 +28,14 @@ function movePlayer(event) {
         playerX += 15;
     }
 
-    if (event.type === 'click') {
-        let clickX = event.clientX - gameArea.offsetLeft; // 클릭 위치 (gameArea 기준)
+    if (event.type === 'click' || event.type === 'touchstart') {
+        let clickX;
+        if (event.type === 'click') {
+            clickX = event.clientX - gameArea.offsetLeft;
+        } else if (event.type === 'touchstart') {
+            clickX = event.touches[0].clientX - gameArea.offsetLeft;
+        }
+        
         if (clickX < gameWidth / 2 && playerX > 0) {
             playerX -= 15;
         } else if (clickX >= gameWidth / 2 && playerX < gameWidth - playerWidth) {
@@ -102,6 +108,7 @@ function startGame() {
     gameInterval = setInterval(movePoops, 100);
     document.addEventListener('keydown', movePlayer);
     gameArea.addEventListener('click', movePlayer);
+    gameArea.addEventListener('touchstart', movePlayer);
 }
 
 restartBtn.addEventListener('click', startGame);
